@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="styles/02.css" />
   <link rel="stylesheet" href="styles/03.css" />
   <link rel="stylesheet" href="styles/04.css" />
+  <link rel="stylesheet" href="styles/timestamp.css" />
 </head>
 <body>
   <main id="loading" style="min-height:100vh;display:grid;place-items:center;font-family:system-ui,sans-serif">Loading…</main>
@@ -28,9 +29,14 @@
           return response.text();
         }));
         document.body.innerHTML = fragments.join('');
-        const script = document.createElement('script');
-        script.src = 'script.js';
-        document.body.appendChild(script);
+        const core = document.createElement('script');
+        core.src = 'assets/timestamp-core.js';
+        core.onload = () => {
+          const script = document.createElement('script');
+          script.src = 'script.js';
+          document.body.appendChild(script);
+        };
+        document.body.appendChild(core);
       } catch (error) {
         document.getElementById('loading').textContent = 'The site could not be loaded.';
         console.error(error);
