@@ -10,6 +10,10 @@
   const toast = document.querySelector('#toast');
   const year = document.querySelector('#year');
 
+  const timestampMark = document.querySelector('#homeTimestampMark');
+  const timestampTime = document.querySelector('#homeTimestampTime');
+  const timestampOffset = document.querySelector('#homeTimestampOffset');
+
   const translations = {
     fa: {
       switchLabel: 'Switch to English',
@@ -114,6 +118,21 @@
   window.addEventListener('scroll', () => {
     header.classList.toggle('scrolled', window.scrollY > 10);
   }, { passive: true });
+
+  if (timestampMark && window.TokenomistTimestamp) {
+    const T = window.TokenomistTimestamp;
+    const updateTimestamp = () => {
+      const now = Date.now();
+      const offset = T.systemOffset();
+      const encoded = T.encode(now, offset);
+      if (!encoded) return;
+      T.render(timestampMark, encoded.digits);
+      timestampTime.textContent = T.localText(now, offset);
+      timestampOffset.textContent = 'UTC ' + T.offText(offset);
+    };
+    updateTimestamp();
+    window.setInterval(updateTimestamp, 1000);
+  }
 
   year.textContent = new Date().getFullYear();
   applyTheme(getSavedTheme());
